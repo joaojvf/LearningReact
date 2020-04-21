@@ -22,7 +22,12 @@ export default class App extends React.Component {
     return <select>{comboBoxOptions}</select>;
   };
 
+  componentDidMount(){
+    console.log("Componente DidMount")
+  }
+
   render() {
+    console.log("Executou o render")
     return (
       <React.Fragment>
         <input type="text" value={this.state.Name} onChange={this.ChangeName} />
