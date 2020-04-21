@@ -1,26 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+function FunctionalComponent() {
+  return <div>hello word</div>;
 }
 
-export default App;
+export default class App extends React.Component {
+  state = {
+    Name: "Joao Victor",
+  };
+
+  ChangeName = (event) => {
+    this.setState({
+      Name: event.target.value,
+    });
+  };
+
+  CreateComboBox = () => {
+    let opcoes = ["Fulano", "Ciclano"];
+    let comboBoxOptions = opcoes.map((opcao) => <option>{opcao}</option>);
+
+    return <select>{comboBoxOptions}</select>;
+  };
+
+  render() {
+    return (
+      <React.Fragment>
+        <input type="text" value={this.state.Name} onChange={this.ChangeName} />
+        <h1>Hello {this.state.Name}</h1>
+        <h4>Other component</h4>
+        {this.CreateComboBox()}
+      </React.Fragment>
+    );
+  }
+}
