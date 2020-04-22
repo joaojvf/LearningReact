@@ -1,4 +1,5 @@
 import React, { memo } from "react";
+import ProdutoServico from "../../app/produtoService";
 
 const estadoInicial = {
   nome: "",
@@ -6,10 +7,17 @@ const estadoInicial = {
   descricao: "",
   preco: 0,
   fornecedor: "",
+  sucesso: false,
+  erros: [],
 };
 
 export default class CadastroProduto extends React.Component {
   state = estadoInicial;
+
+  constructor() {
+    super();
+    this.service = new ProdutoServico();
+  }
 
   onChange = (event) => {
     const valor = event.target.value;
@@ -19,7 +27,23 @@ export default class CadastroProduto extends React.Component {
   };
 
   onSubmit = (event) => {
-    console.log(this.state);
+    const produto = {
+      nome: this.state.nome,
+      sku: this.state.sku,
+      descricao: this.state.descricao,
+      preco: this.state.preco,
+      fornecedor: this.state.fornecedor,
+
+      sucesso: false,
+    };
+    try {
+      this.service.salvar(produto);
+      this.limpaCampos();
+      this.setState({ sucesso: true });
+    } catch (erro) {
+      const erros = erro.erros;
+      this.setState({ erros: erros });
+    }
   };
 
   limpaCampos = () => {
@@ -31,6 +55,28 @@ export default class CadastroProduto extends React.Component {
       <div className="card">
         <div className="card-header">Cadastro de Produto</div>
         <div className="card-body">
+          {this.state.sucesso && (
+            <div class="alert alert-dismissible alert-success">
+              <button type="button" class="close" data-dismiss="alert">
+                &times;
+              </button>
+              <strong>Bom Trabalho!</strong>
+              Cadastro realizado com sucesso.
+            </div>
+          )}
+          {this.state.erros.length > 0 &&
+            this.state.erros.map((msg) => {
+              return (
+                <div class="alert alert-dismissible alert-danger">
+                  <button type="button" class="close" data-dismiss="alert">
+                    &times;
+                  </button>
+                  <strong>Erro!</strong>
+                  {msg}
+                </div>
+              );
+            })}
+
           <div className="row">
             <div className="col-md-6">
               <div className="form-group">
