@@ -2,7 +2,7 @@ import React from "react";
 import { withRouter } from "react-router-dom";
 import ProdutoServico from "../../app/produtoService";
 import Card from "../../components/card";
-
+import ProdutosTabela from "../Produtos/produtosTable";
 
 class ConsultaProdutos extends React.Component {
   state = {
@@ -26,51 +26,17 @@ class ConsultaProdutos extends React.Component {
 
   deletarProduto = (sku) => {
     const produtos = this.service.deletar(sku);
-    this.setState({produtos})
+    this.setState({ produtos });
   };
 
   render() {
     return (
-      <Card header ="Consulta de Produto">
-      
-          <table className="table table-hover">
-            <thead>
-              <tr>
-                <th>Nome</th>
-                <th>SKU</th>
-                <th>Preço</th>
-                <th>Fornecedor</th>
-                <th></th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {this.state.produtos.map((produto, index) => {
-                return (
-                  <tr key={index}>
-                    <th>{produto.nome}</th>
-                    <th>{produto.sku}</th>
-                    <th>{produto.preco}</th>
-                    <th>{produto.fornecedor}</th>
-                    <th>
-                      <button
-                        onClick={() => this.preparaEditar(produto.sku)}
-                        className="btn btn-primary"
-                      >
-                        Editar
-                      </button>
-                      <button
-                        onClick={() => this.deletarProduto(produto.sku)}
-                        className="btn btn-danger"
-                      >
-                        Remover
-                      </button>
-                    </th>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+      <Card header="Consulta de Produto">
+        <ProdutosTabela
+          produtos={this.state.produtos}
+          editarAction={this.preparaEditar}
+          deletarAction={this.deletarProduto}
+        ></ProdutosTabela>
       </Card>
     );
   }
