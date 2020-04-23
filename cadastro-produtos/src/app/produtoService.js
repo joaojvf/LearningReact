@@ -1,44 +1,57 @@
 const PRODUTOS = "_PRODUTOS";
 
-export function ErroValidacao (erros) {
-    this.erros =erros;
+export function ErroValidacao(erros) {
+  this.erros = erros;
 }
 
 export default class ProdutoServico {
+  obterProdutos = () => {
+    const produtos = localStorage.getItem(PRODUTOS);
 
-    obterProdutos = () => {
-        const produtos = localStorage.getItem(PRODUTOS);
-        return JSON.parse(produtos);
+    if(!produtos){
+      return [];
+    }
+    return JSON.parse(produtos);
+  };
+
+  validar = (produto) => {
+    const erros = [];
+
+    if (!produto.nome) {
+      console.log("entrou erro nome");
+      erros.push("O campo Nome é obrigatório");
     }
 
-    validar = (produto) => {
-        const erros = [];
-
-        if(!produto.nome){
-            console.log("entrou erro nome")
-            erros.push('O campo Nome é obrigatório');
-        }
-
-        
-        if(!produto.sku){
-            erros.push('O campo Sku é obrigatório');
-        }
-        
-        if(!produto.preco || produto.preco <= 0){
-            erros.push('O campo Preço precisa ser maior que 0.');
-        }
-    
-        if(!produto.fornecedor){
-            erros.push('O campo Fornecedor é obrigatório');
-        }        
-
-        if (erros.length > 0){
-            throw new ErroValidacao(erros);
-        }
+    if (!produto.sku) {
+      erros.push("O campo Sku é obrigatório");
     }
+
+    if (!produto.preco || produto.preco <= 0) {
+      erros.push("O campo Preço precisa ser maior que 0.");
+    }
+
+    if (!produto.fornecedor) {
+      erros.push("O campo Fornecedor é obrigatório");
+    }
+
+    if (erros.length > 0) {
+      throw new ErroValidacao(erros);
+    }
+  };
+
+  obterIndex = (sku) => {
+    let index = null;
+    this.obterProdutos().forEach((produto, i) => {
+      if (produto.sku === sku) {
+        index = i;
+      }
+    });
+
+    return index;
+  };
 
   salvar = (produto) => {
-      this.validar(produto);
+    this.validar(produto);
 
     let produtos = localStorage.getItem(PRODUTOS);
 
@@ -47,8 +60,14 @@ export default class ProdutoServico {
     } else {
       produtos = JSON.parse(produtos);
     }
+    // const index = null;
+    const index = this.obterIndex(produto.sku);
 
-    produtos.push(produto);
+    if (index === null) {
+      produtos.push(produto);
+    } else {
+      produtos[index] = produto;
+    }
 
     localStorage.setItem(PRODUTOS, JSON.stringify(produtos));
   };

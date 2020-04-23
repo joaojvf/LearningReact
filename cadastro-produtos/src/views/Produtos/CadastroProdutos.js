@@ -1,5 +1,6 @@
-import React, { memo } from "react";
+import React from "react";
 import ProdutoServico from "../../app/produtoService";
+import { withRouter } from "react-router-dom";
 
 const estadoInicial = {
   nome: "",
@@ -9,9 +10,10 @@ const estadoInicial = {
   fornecedor: "",
   sucesso: false,
   erros: [],
+  atualizando: false
 };
 
-export default class CadastroProduto extends React.Component {
+class CadastroProduto extends React.Component {
   state = estadoInicial;
 
   constructor() {
@@ -50,12 +52,29 @@ export default class CadastroProduto extends React.Component {
     this.setState(estadoInicial);
   };
 
+  componentDidMount() {
+    const sku = this.props.match.params.sku;
+
+    if (sku) {
+      const resultado = this.service
+                              .obterProdutos()
+                              .filter((p) => (p.sku === sku));
+
+      console.log("Resultado: ", resultado)
+      if (resultado.length >= 0) {
+        const produtoEncontrado = resultado[0];
+        this.setState({ ...produtoEncontrado, atualizando: true });
+      }
+    }
+  }
+
   render() {
     return (
       <div className="card">
-        <div className="card-header">Cadastro de Produto</div>
+        <div className="card-header">{this.state.atualizando ? 'Atualização' : ' Cadastro'} de Produto</div>
+        
         <div className="card-body">
-          {this.state.sucesso && (
+          {this.state.sucesso && 
             <div class="alert alert-dismissible alert-success">
               <button type="button" class="close" data-dismiss="alert">
                 &times;
@@ -63,7 +82,7 @@ export default class CadastroProduto extends React.Component {
               <strong>Bom Trabalho!</strong>
               Cadastro realizado com sucesso.
             </div>
-          )}
+          }
           {this.state.erros.length > 0 &&
             this.state.erros.map((msg) => {
               return (
@@ -97,6 +116,7 @@ export default class CadastroProduto extends React.Component {
                 <input
                   type="text"
                   name="sku"
+                  disabled={this.state.atualizando}
                   value={this.state.sku}
                   onChange={this.onChange}
                   className="form-control"
@@ -149,7 +169,7 @@ export default class CadastroProduto extends React.Component {
           <div className="row">
             <div className="col-md-1">
               <button onClick={this.onSubmit} className="btn btn-success">
-                Salvar
+                {this.state.atualizando ? 'Atualizar' : 'Salvar'}
               </button>
             </div>
 
@@ -164,3 +184,4 @@ export default class CadastroProduto extends React.Component {
     );
   }
 }
+export default withRouter(CadastroProduto);
