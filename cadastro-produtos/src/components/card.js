@@ -1,8 +1,8 @@
-import React from 'react'
+import React from "react";
 
-export default () => (
-    <div className="card">
-        <div className="card-header"></div>
-        <div className="card-body"></div>
-    </div>
-)
+export default (props) => (
+  <div className="card">
+    <div className="card-header">{props.header}</div>
+    <div className="card-body">{props.children}</div>
+  </div>
+);

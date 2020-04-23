@@ -1,6 +1,8 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
 import ProdutoServico from "../../app/produtoService";
+import Card from "../../components/card";
+
 
 class ConsultaProdutos extends React.Component {
   state = {
@@ -29,9 +31,8 @@ class ConsultaProdutos extends React.Component {
 
   render() {
     return (
-      <div className="card">
-        <div className="card-header">Consulta de Produto</div>
-        <div className="card-body">
+      <Card header ="Consulta de Produto">
+      
           <table className="table table-hover">
             <thead>
               <tr>
@@ -70,8 +71,7 @@ class ConsultaProdutos extends React.Component {
               })}
             </tbody>
           </table>
-        </div>
-      </div>
+      </Card>
     );
   }
 }
