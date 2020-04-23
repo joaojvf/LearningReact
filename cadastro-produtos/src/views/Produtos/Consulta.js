@@ -1,26 +1,31 @@
 import React from "react";
-import {withRouter} from 'react-router-dom'
-import ProdutoServico  from '../../app/produtoService'
+import { withRouter } from "react-router-dom";
+import ProdutoServico from "../../app/produtoService";
 
 class ConsultaProdutos extends React.Component {
   state = {
     produtos: [],
   };
 
-  constructor () {
-      super();
-      this.service = new ProdutoServico();
+  constructor() {
+    super();
+    this.service = new ProdutoServico();
   }
 
-  componentDidMount(){
+  componentDidMount() {
     const produtos = this.service.obterProdutos();
-    this.setState({produtos})
+    this.setState({ produtos });
   }
 
   preparaEditar = (sku) => {
-    console.log(`Sku para editar ${sku}`)
+    console.log(`Sku para editar ${sku}`);
     this.props.history.push(`/cadastro-produtos/${sku}`);
-  }
+  };
+
+  deletarProduto = (sku) => {
+    const produtos = this.service.deletar(sku);
+    this.setState({produtos})
+  };
 
   render() {
     return (
@@ -41,14 +46,24 @@ class ConsultaProdutos extends React.Component {
             <tbody>
               {this.state.produtos.map((produto, index) => {
                 return (
-                  <tr key ={index}>
+                  <tr key={index}>
                     <th>{produto.nome}</th>
                     <th>{produto.sku}</th>
                     <th>{produto.preco}</th>
                     <th>{produto.fornecedor}</th>
                     <th>
-                      <button onClick={() => this.preparaEditar(produto.sku)} className="btn btn-primary">Editar</button>
-                      <button className="btn btn-danger">Remover</button>
+                      <button
+                        onClick={() => this.preparaEditar(produto.sku)}
+                        className="btn btn-primary"
+                      >
+                        Editar
+                      </button>
+                      <button
+                        onClick={() => this.deletarProduto(produto.sku)}
+                        className="btn btn-danger"
+                      >
+                        Remover
+                      </button>
                     </th>
                   </tr>
                 );
@@ -61,4 +76,4 @@ class ConsultaProdutos extends React.Component {
   }
 }
 
-export default withRouter(ConsultaProdutos)
+export default withRouter(ConsultaProdutos);

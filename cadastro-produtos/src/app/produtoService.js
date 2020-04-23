@@ -8,10 +8,22 @@ export default class ProdutoServico {
   obterProdutos = () => {
     const produtos = localStorage.getItem(PRODUTOS);
 
-    if(!produtos){
+    if (!produtos) {
       return [];
     }
     return JSON.parse(produtos);
+  };
+
+  deletar = (sku) => {
+    const index = this.obterIndex(sku);
+
+    if (index !== null) {
+      const produtos = this.obterProdutos();
+      produtos.splice(index, 1);
+      localStorage.setItem(PRODUTOS, JSON.stringify(produtos));
+
+      return produtos
+    }
   };
 
   validar = (produto) => {
