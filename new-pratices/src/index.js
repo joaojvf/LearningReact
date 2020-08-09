@@ -1,12 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
+import CadastroProdutos from './pages/CadastroProdutos';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <CadastroProdutos />
   </React.StrictMode>,
   document.getElementById('root')
 );
